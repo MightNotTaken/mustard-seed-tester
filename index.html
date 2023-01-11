@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuckByte MQT</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="./js/api.js"></script>
+    <script src="./js/color-set.model.js"></script>
+    <script src="./js/color.utility.js"></script>
+    <script src="./js/color.bound.js"></script>
+    <script src="./js/color.model.js"></script>
+    <script src="./js/image.service.js"></script>
+    <script src="./js/script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="camera-container" id="cam-cont">
+        <!-- <video #videoElement src="./assets/video/dummy.mp4"></video> -->
+        <img id="image" src="http://localhost:3030" alt="">
+        
+        <!-- <img id="image" src="./img/green.png" alt="" /> -->
+        <canvas
+          crossOrigin="anonymous"
+          id="canvas1"
+          class="chide"
+        ></canvas>
+        <canvas
+          crossOrigin="anonymous"
+          id="canvas2"
+          class="chide"
+          
+        ></canvas>
+        <div class="spinner" id="spinner">
+          <div class="ball"></div>
+          <div class="ball"></div>
+          <div class="ball"></div>
+          <div class="ball"></div>
+        </div>
+        
+
+      </div>
+      <div class="top-left">
+        <img class="power-button" onClick="_.systemShutdown()" src="./img/switch-off.png" alt="" />
+        <div class="export-button" onClick="_.startExport()">Export</div>
+      </div>
+      <div class="right-center">
+        <div class="color-field">
+          <div class="chip-container">
+            <div class="chip" id="c0"></div>
+            <span>:</span>
+          </div>
+          <div class="percentage" id="p0">98.00%</div>
+        </div>
+        <div class="color-field">
+          <div class="chip-container">
+            <div class="chip" id="c1"></div>
+            <span>:</span>
+          </div>
+          <div class="percentage" id="p1">98.00%</div>
+        </div>
+        <div class="color-field">
+          <div class="chip-container">
+            <div class="chip" id="c2"></div>
+            <span>:</span>
+          </div>
+          <div class="percentage" id="p2">98.00%</div>
+        </div>
+        <div class="color-field">
+          <div class="chip-container">
+            <div class="chip" id="c3"></div>
+            <span>:</span>
+          </div>
+          <div class="percentage" id="p3">98.00%</div>
+        </div>
+        <div class="color-field">
+          <div class="chip-container">
+            <div class="chip" id="c4"></div>
+            <span>:</span>
+          </div>
+          <div class="percentage" id="p4">98.00%</div>
+        </div>
+      </div>
+      <div class="top-right">
+        <div class="test-no">
+          <span>Test No:</span>
+          <span id="test-no"></span>
+        </div>
+        <div class="time">
+          <span>Time: </span>
+          <span id="time">12:02 PM</span>
+        </div>
+        <div class="time">
+          <span>Date: </span>
+          <span id="date">1 Jan, 2022</span>
+        </div>
+      </div>
+      <div class="bottom-right">
+        <div class="button" id="start-button" onClick="_.capture()">Start</div>
+        <div class="result-buttons" id="result-buttons">
+          <div class="button" id="save" onClick="_.saveData()">Save</div>
+          <div class="button" id="retake" onClick="_.resetImage()">Retake</div>
+        </div>
+      </div>
+      <div class="bottom-left">
+        <div class="text">
+          <span id="progress">Progress: </span>
+          <span id="proportion"></span>
+        </div>
+        <div class="status-bar">
+          <div class="value" id="status-bar-value"></div>
+        </div>
+      </div>
+    </div>
+    <div id="global-splash-screen">
+      <div class="splash-screen" id="splash-screen">
+        <div class="text"><span>Buck</span>Byte</div>
+      </div>
+    </div>
+  </body>
+</html>
