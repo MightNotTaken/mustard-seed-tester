@@ -136,7 +136,7 @@ class ImageService {
     this.outputCanvas = document.querySelector(outputCanvasID);
     this.outputContext = this.outputCanvas.getContext('2d');
 
-    this.greenPixels = [];
+    this.greenPixels = [GREEN_PIXEL];
     this.initialSegregation();
     this.colorProportions = [
       Math.round((this.yCount * 10000) / this.totalCount) / 100,
