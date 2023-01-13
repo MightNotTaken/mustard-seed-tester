@@ -6,9 +6,16 @@ const WHITE_PIXEL = [255, 255, 255];
 
 const BLACK_PIXEL = [0, 0, 0];
 
-const GREEN_PIXEL = [76, 109, 63];
+const GREEN_PIXEL = [76, 150, 63];
 const YELLOW_PIXEL = [166, 157, 122];
 const BROWN_PIXEL = [70, 40, 60];
+const BROWN_PIXEL2 = [70, 120, 60];
+
+
+const yellowLAB = rgb2lab(YELLOW_PIXEL);
+const greenLAB = rgb2lab(GREEN_PIXEL);
+const brownLAB = rgb2lab(BROWN_PIXEL);
+const whiteLAB = rgb2lab(WHITE_PIXEL);
 
 const PIXEL_ARRAY = [YELLOW_PIXEL, GREEN_PIXEL, BROWN_PIXEL, YELLOW_PIXEL];
 
@@ -293,10 +300,6 @@ class ImageService {
 
 
   getRoundedColorX2([r, g, b]) {
-    const yellowLAB = rgb2lab(YELLOW_PIXEL);
-    const greenLAB = rgb2lab(GREEN_PIXEL);
-    const brownLAB = rgb2lab(BROWN_PIXEL);
-    const whiteLAB = rgb2lab(WHITE_PIXEL);
 
     const testLAB = rgb2lab([r, g, b]);
 
