@@ -1,5 +1,6 @@
 const SENTINEL_VALUE = -1;
 const ALL = 1;
+const GLOBAL_PIXEL_OF_INTEREST = ALL;
 
 const WHITE_PIXEL = [255, 255, 255];
 
@@ -7,9 +8,9 @@ const BLACK_PIXEL = [0, 0, 0];
 
 const GREEN_PIXEL = [76, 109, 63];
 const YELLOW_PIXEL = [166, 157, 122];
-const BROWN_PIXEL = [70, 70, 70];
+const BROWN_PIXEL = [70, 40, 60];
 
-const PIXEL_ARRAY = [YELLOW_PIXEL, GREEN_PIXEL, BROWN_PIXEL, BLACK_PIXEL, YELLOW_PIXEL];
+const PIXEL_ARRAY = [YELLOW_PIXEL, GREEN_PIXEL, BROWN_PIXEL, YELLOW_PIXEL];
 
 class ImageService {
   greenBound = new ColorBound([80, 20, 20], [160, 20, 20]);
@@ -36,7 +37,9 @@ class ImageService {
   
   colorProportions = null;
   outputContext = null;
-  constructor() {}
+  constructor() {
+    this.pixelOfInterest = GLOBAL_PIXEL_OF_INTEREST;
+  }
   
   getDistance(x, y, x_, y_) {
     return Math.sqrt(Math.pow(x - x_, 2) + Math.pow(y - y_, 2));
@@ -163,7 +166,7 @@ class ImageService {
   
   lastPixel = BROWN_PIXEL[0];
 
-  initialSegregation() {
+  initialSegregation(forced = false) {
     this.bCount = 0;
     this.yCount = 0;
     this.gCount = 0;
@@ -173,17 +176,21 @@ class ImageService {
     let luxPixels = [0, 0, 0, 0];
     let emptyPixel = 0;
 
+    console.log(this.imageData.height, this.imageData.width)
+
+
     for (let i = 0; i < this.imageData.data.length - 12; i += 4) {
       let [_r, _g, _b, _a, r, g, b, a, r_, g_, b_, a_] = [...this.imageData.data.slice(i, i + 12)];
       let [r__, g__, b__] = [r, g, b];
+      
       if (bais) {
-        // r = (bais[0] + _r + r + r_ ) / 4;
-        // g = (bais[1] + _g + g + g_ ) / 4;
-        // b = (bais[2] + _b + b + b_ ) / 4;
+        r = (bais[0] + _r + r + r_ ) / 4;
+        g = (bais[1] + _g + g + g_ ) / 4;
+        b = (bais[2] + _b + b + b_ ) / 4;
       } else {
-        // r = (_r + r + r_ ) / 3;
-        // g = (_g + g + g_ ) / 3;
-        // b = (_b + b + b_ ) / 3;
+        r = (_r + r + r_ ) / 3;
+        g = (_g + g + g_ ) / 3;
+        b = (_b + b + b_ ) / 3;
       }
 
       if (!a) {
@@ -196,11 +203,11 @@ class ImageService {
       luxPixels[1] += g__;
       luxPixels[2] += b__;
       let response = this.getRoundedColorX2([r, g, b]);
-      // if (!bais && (response[0] === BROWN_PIXEL[0] && this.lastPixel != BROWN_PIXEL[0] || response[0] === GREEN_PIXEL[0] && this.lastPixel != GREEN_PIXEL[0] )) {
-      //   bais = YELLOW_PIXEL;
-      //   i -= 4;
-      //   continue;
-      // }
+      if (!bais && (response[0] === BROWN_PIXEL[0] && this.lastPixel != BROWN_PIXEL[0] || response[0] === GREEN_PIXEL[0] && this.lastPixel != GREEN_PIXEL[0] )) {
+        bais = YELLOW_PIXEL;
+        i -= 4;
+        continue;
+      }
       bais = null;
       this.lastPixel = response[0];
 
@@ -215,11 +222,18 @@ class ImageService {
         this.bCount ++;
         this.totalCount ++;
       }
-
+      if (this.pixelOfInterest !== ALL) {
+        if (response[0] !== this.pixelOfInterest[0]) {
+          response = BLACK_PIXEL;
+        } else {
+          response = [r__, g__, b__];
+        }
+      }
       for (let j = 0; j < 3; j++) {
         this.imageData.data[i + j] = response[j];
       }
-    
+  
+        
     }
     
     console.log(this.totalCount, emptyPixel, luxPixels[3]);
@@ -231,6 +245,8 @@ class ImageService {
     this.luxLevel = 0.2126 * R + 0.7152 * G + 0.0722 * B;
     console.log(this.luxLevel)
     this.context.putImageData(this.imageData, 0, 0);
+    
+    
   }
 
   
@@ -280,9 +296,7 @@ class ImageService {
     const yellowLAB = rgb2lab(YELLOW_PIXEL);
     const greenLAB = rgb2lab(GREEN_PIXEL);
     const brownLAB = rgb2lab(BROWN_PIXEL);
-    const blackLAB = rgb2lab(BLACK_PIXEL);
     const whiteLAB = rgb2lab(WHITE_PIXEL);
-    
 
     const testLAB = rgb2lab([r, g, b]);
 
@@ -290,11 +304,10 @@ class ImageService {
       deltaE(yellowLAB, testLAB),
       deltaE(greenLAB, testLAB),
       deltaE(brownLAB, testLAB),
-      deltaE(blackLAB, testLAB),
       deltaE(whiteLAB, testLAB)
     ];
     let least = 0;
-    for (let i=0; i<5; i++) {
+    for (let i=0; i<4; i++) {
       if (delta[i] < delta[least]) {
         least = i;
       }
