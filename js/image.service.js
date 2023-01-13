@@ -261,7 +261,7 @@ class ImageService {
 
     const delta = [
       deltaE(yellowLAB, testLAB) * 0.95,
-      deltaE(greenLAB, testLAB),
+      deltaE(greenLAB, testLAB) * 1.05,
       deltaE(brownLAB, testLAB) * 0.8,
       deltaE(whiteLAB, testLAB) * 0.9
     ];
