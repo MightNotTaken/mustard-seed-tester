@@ -6,6 +6,10 @@ const WHITE_PIXEL = [255, 255, 255];
 
 const BLACK_PIXEL = [0, 0, 0];
 
+// const GREEN_PIXEL = [76, 150, 63];
+// const YELLOW_PIXEL = [166, 157, 122];
+// const BROWN_PIXEL = [70, 40, 60];
+// const BROWN_PIXEL2 = [70, 120, 60];
 const GREEN_PIXEL = [76, 150, 63];
 const YELLOW_PIXEL = [166, 157, 122];
 const BROWN_PIXEL = [70, 40, 60];
@@ -41,7 +45,9 @@ class ImageService {
   gCount = 0;
   totalCount = 0;
   greenPixels = [];
+  lastPixel = BROWN_PIXEL[0];
   
+
   colorProportions = null;
   outputContext = null;
   constructor() {
@@ -171,7 +177,6 @@ class ImageService {
     ];  
   }
   
-  lastPixel = BROWN_PIXEL[0];
 
   initialSegregation(forced = false) {
     this.bCount = 0;
@@ -179,48 +184,17 @@ class ImageService {
     this.gCount = 0;
     this.totalCount = 0;
     
-    let bais = null;
-    let luxPixels = [0, 0, 0, 0];
-    let emptyPixel = 0;
 
-    console.log(this.imageData.height, this.imageData.width)
-
-
-    for (let i = 0; i < this.imageData.data.length - 12; i += 4) {
-      let [_r, _g, _b, _a, r, g, b, a, r_, g_, b_, a_] = [...this.imageData.data.slice(i, i + 12)];
-      let [r__, g__, b__] = [r, g, b];
-      
-      // if (bais) {
-      //   r = (bais[0] + _r + r + r_ ) / 4;
-      //   g = (bais[1] + _g + g + g_ ) / 4;
-      //   b = (bais[2] + _b + b + b_ ) / 4;
-      // } else {
-      //   r = (_r + r + r_ ) / 3;
-      //   g = (_g + g + g_ ) / 3;
-      //   b = (_b + b + b_ ) / 3;
-      // }
-
+    for (let i = 0; i < this.imageData.data.length; i += 4) {
+      let [r, g, b, a] = [...this.imageData.data.slice(i, i + 4)];
       if (!a) {
-        emptyPixel ++;
-
         continue;
       }
-      luxPixels[3] ++;
-      luxPixels[0] += r__;
-      luxPixels[1] += g__;
-      luxPixels[2] += b__;
       let response = this.getRoundedColorX2([r, g, b]);
-      // if (!bais && (response[0] === BROWN_PIXEL[0] && this.lastPixel != BROWN_PIXEL[0] || response[0] === GREEN_PIXEL[0] && this.lastPixel != GREEN_PIXEL[0] )) {
-      //   bais = YELLOW_PIXEL;
-      //   i -= 4;
-      //   continue;
-      // }
-      // bais = null;
-      this.lastPixel = response[0];
-
+      
       if (response[0] == GREEN_PIXEL[0]) {
         this.gCount += 1;
-        this.greenPixels.push([r__, g__, b__, a]);
+        this.greenPixels.push([r, g, b, a]);
         this.totalCount++;
       } else if (response[0] === YELLOW_PIXEL[0]) {
         this.yCount ++;
@@ -229,31 +203,13 @@ class ImageService {
         this.bCount ++;
         this.totalCount ++;
       }
-      if (this.pixelOfInterest !== ALL) {
-        if (response[0] !== this.pixelOfInterest[0]) {
-          response = BLACK_PIXEL;
-        } else {
-          response = [r__, g__, b__];
-        }
-      }
+      
       for (let j = 0; j < 3; j++) {
         this.imageData.data[i + j] = response[j];
       }
-  
-        
     }
     
-    console.log(this.totalCount, emptyPixel, luxPixels[3]);
-    luxPixels [0] = Math.round(luxPixels [0] / luxPixels[3]);
-    luxPixels [1] = Math.round(luxPixels [1] / luxPixels[3]);
-    luxPixels [2] = Math.round(luxPixels [2] / luxPixels[3]);
-    const [R, G, B, _] = luxPixels;
-    console.log([R, G, B]);
-    this.luxLevel = 0.2126 * R + 0.7152 * G + 0.0722 * B;
-    console.log(this.luxLevel)
     this.context.putImageData(this.imageData, 0, 0);
-    
-    
   }
 
   
@@ -304,17 +260,19 @@ class ImageService {
     const testLAB = rgb2lab([r, g, b]);
 
     const delta = [
-      deltaE(yellowLAB, testLAB),
+      deltaE(yellowLAB, testLAB) * 0.88,
       deltaE(greenLAB, testLAB),
       deltaE(brownLAB, testLAB),
       deltaE(whiteLAB, testLAB)
     ];
+
     let least = 0;
     for (let i=0; i<4; i++) {
       if (delta[i] < delta[least]) {
         least = i;
       }
     }
+    
     return PIXEL_ARRAY[least];
   }
   
@@ -353,3 +311,4 @@ class ImageService {
     }
   }
 }
+
