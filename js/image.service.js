@@ -5,7 +5,7 @@ const WHITE_PIXEL = [255, 255, 255];
 
 const BLACK_PIXEL = [0, 0, 0];
 
-const GREEN_PIXEL = [240, 236, 39];
+const GREEN_PIXEL = [76, 109, 63];
 const YELLOW_PIXEL = [166, 157, 122];
 const BROWN_PIXEL = [70, 70, 70];
 
@@ -177,13 +177,13 @@ class ImageService {
       let [_r, _g, _b, _a, r, g, b, a, r_, g_, b_, a_] = [...this.imageData.data.slice(i, i + 12)];
       let [r__, g__, b__] = [r, g, b];
       if (bais) {
-        r = (bais[0] + _r + r + r_ ) / 4;
-        g = (bais[1] + _g + g + g_ ) / 4;
-        b = (bais[2] + _b + b + b_ ) / 4;
+        // r = (bais[0] + _r + r + r_ ) / 4;
+        // g = (bais[1] + _g + g + g_ ) / 4;
+        // b = (bais[2] + _b + b + b_ ) / 4;
       } else {
-        r = (_r + r + r_ ) / 3;
-        g = (_g + g + g_ ) / 3;
-        b = (_b + b + b_ ) / 3;
+        // r = (_r + r + r_ ) / 3;
+        // g = (_g + g + g_ ) / 3;
+        // b = (_b + b + b_ ) / 3;
       }
 
       if (!a) {
@@ -196,11 +196,11 @@ class ImageService {
       luxPixels[1] += g__;
       luxPixels[2] += b__;
       let response = this.getRoundedColorX2([r, g, b]);
-      if (!bais && (response[0] === BROWN_PIXEL[0] && this.lastPixel != BROWN_PIXEL[0] || response[0] === GREEN_PIXEL[0] && this.lastPixel != GREEN_PIXEL[0] )) {
-        bais = YELLOW_PIXEL;
-        i -= 4;
-        continue;
-      }
+      // if (!bais && (response[0] === BROWN_PIXEL[0] && this.lastPixel != BROWN_PIXEL[0] || response[0] === GREEN_PIXEL[0] && this.lastPixel != GREEN_PIXEL[0] )) {
+      //   bais = YELLOW_PIXEL;
+      //   i -= 4;
+      //   continue;
+      // }
       bais = null;
       this.lastPixel = response[0];
 
@@ -302,7 +302,7 @@ class ImageService {
     return PIXEL_ARRAY[least];
   }
   
-  getRoundedColorX3([r, g, b]) {
+  getRoundedColorX2_([r, g, b]) {
     const color = new HSVColor();
     color.loadRGB(r, g, b);
     const [h, s, v] = color.hsv();
