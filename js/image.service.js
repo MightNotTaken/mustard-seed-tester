@@ -260,10 +260,10 @@ class ImageService {
     const testLAB = rgb2lab([r, g, b]);
 
     const delta = [
-      deltaE(yellowLAB, testLAB),
+      deltaE(yellowLAB, testLAB) * 0.95,
       deltaE(greenLAB, testLAB),
       deltaE(brownLAB, testLAB) * 0.8,
-      deltaE(whiteLAB, testLAB)
+      deltaE(whiteLAB, testLAB) * 0.9
     ];
 
     let least = 0;
