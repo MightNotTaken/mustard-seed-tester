@@ -190,15 +190,15 @@ class ImageService {
       let [_r, _g, _b, _a, r, g, b, a, r_, g_, b_, a_] = [...this.imageData.data.slice(i, i + 12)];
       let [r__, g__, b__] = [r, g, b];
       
-      if (bais) {
-        r = (bais[0] + _r + r + r_ ) / 4;
-        g = (bais[1] + _g + g + g_ ) / 4;
-        b = (bais[2] + _b + b + b_ ) / 4;
-      } else {
-        r = (_r + r + r_ ) / 3;
-        g = (_g + g + g_ ) / 3;
-        b = (_b + b + b_ ) / 3;
-      }
+      // if (bais) {
+      //   r = (bais[0] + _r + r + r_ ) / 4;
+      //   g = (bais[1] + _g + g + g_ ) / 4;
+      //   b = (bais[2] + _b + b + b_ ) / 4;
+      // } else {
+      //   r = (_r + r + r_ ) / 3;
+      //   g = (_g + g + g_ ) / 3;
+      //   b = (_b + b + b_ ) / 3;
+      // }
 
       if (!a) {
         emptyPixel ++;
@@ -210,12 +210,12 @@ class ImageService {
       luxPixels[1] += g__;
       luxPixels[2] += b__;
       let response = this.getRoundedColorX2([r, g, b]);
-      if (!bais && (response[0] === BROWN_PIXEL[0] && this.lastPixel != BROWN_PIXEL[0] || response[0] === GREEN_PIXEL[0] && this.lastPixel != GREEN_PIXEL[0] )) {
-        bais = YELLOW_PIXEL;
-        i -= 4;
-        continue;
-      }
-      bais = null;
+      // if (!bais && (response[0] === BROWN_PIXEL[0] && this.lastPixel != BROWN_PIXEL[0] || response[0] === GREEN_PIXEL[0] && this.lastPixel != GREEN_PIXEL[0] )) {
+      //   bais = YELLOW_PIXEL;
+      //   i -= 4;
+      //   continue;
+      // }
+      // bais = null;
       this.lastPixel = response[0];
 
       if (response[0] == GREEN_PIXEL[0]) {
