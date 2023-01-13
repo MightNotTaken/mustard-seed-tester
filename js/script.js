@@ -184,7 +184,7 @@ class MainService {
     this.show('global-splash-screen');
     setTimeout(() => {
       this.hide('global-splash-screen');
-    }, 1000);
+    }, 5000);
     this.dateContainer = document.getElementById('date');
     this.timeContainer = document.getElementById('time');
     setInterval(() => {
