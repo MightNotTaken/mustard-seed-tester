@@ -190,8 +190,8 @@ class ImageService {
       if (!a) {
         continue;
       }
+
       let response = this.getRoundedColorX2([r, g, b]);
-      
       if (response[0] == GREEN_PIXEL[0]) {
         this.gCount += 1;
         this.greenPixels.push([r, g, b, a]);
@@ -260,9 +260,9 @@ class ImageService {
     const testLAB = rgb2lab([r, g, b]);
 
     const delta = [
-      deltaE(yellowLAB, testLAB) * 0.88,
+      deltaE(yellowLAB, testLAB),
       deltaE(greenLAB, testLAB),
-      deltaE(brownLAB, testLAB),
+      deltaE(brownLAB, testLAB) * 0.8,
       deltaE(whiteLAB, testLAB)
     ];
 
