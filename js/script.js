@@ -6,14 +6,14 @@ class MainService {
   containerDimensions = 0;
   colorSections = null;
   firstTime = true;
-
   dateContainer;
   timeContainer;
 
+  expired = false;
+  eventClick = '';
   http = new HTTP();
 
   monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   setCameraContainerDimensions = function () {
     const container = document.getElementById("cam-cont");
     this.containerDimensions =
@@ -149,11 +149,11 @@ class MainService {
 
     const chips = document.getElementsByClassName('chip');
     for (let i=0; i<chips.length; i++) {
-        if (i == this.activated) {
-            chips[i].classList.add('active');
-        } else {
-            chips[i].classList.remove('active');
-        }
+      if (i == this.activated) {
+          chips[i].classList.add('active');
+      } else {
+          chips[i].classList.remove('active');
+      }
     }
 
     this.imageService.choosePixelOfInterest(x);
@@ -176,6 +176,12 @@ class MainService {
   }
 
   initialize = function () {
+    this.http.get('http://localhost:3030/expiry').then(status => {
+      if (status.expired) {
+        this.show('error-screen');
+      }
+      this.expired = status.expired;
+    }, error => console.error(error));
     this.hide('result-buttons');
     this.setCameraContainerDimensions();
     this.hide('spinner');
@@ -206,7 +212,7 @@ class MainService {
         document.getElementById('proportion').innerText = ``;
       }, 2000);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
@@ -223,10 +229,28 @@ class MainService {
 const _ = new MainService();
 
 
-window.onload = (event) => {
+window.onload = () => {
   _.initialize();
 }
 
-window.addEventListener('resize', function(event) {
+window.addEventListener('keypress', (event) => {
+  if (_.expired) {
+    _.eventClick += event.key;
+    if (_.eventClick.toLocaleLowerCase().includes('reset')) {
+      _.http.get('http://localhost:3030/remove-expiry').then(console.log, console.error)
+    }
+  }
+
+  if (!_.expired) {
+    _.eventClick += event.key;
+    console.log(_.eventClick)
+    if (_.eventClick.toLocaleLowerCase().includes('initiate-expiry')) {
+      _.http.get('http://localhost:3030/initiate-expiry').then(console.log, console.error)
+    }
+  }
+})
+
+window.addEventListener('resize', function() {
   _.setCameraContainerDimensions()
 })
+
