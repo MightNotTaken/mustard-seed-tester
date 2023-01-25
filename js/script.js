@@ -200,8 +200,8 @@ class MainService {
 
   startExport = async function () {
     try {
-      const { total } = await this.http.get('http://localhost:3030/getTotalFiles');
       document.getElementById('progress').innerText = 'Exporting : ';
+      const { total } = await this.http.get('http://localhost:3030/getTotalFiles');
       for (let i=0; i<total; i++) {
         document.getElementById('proportion').innerText = `( ${i + 1} / ${total} )`;
         this.increaseProgressBar(Math.round(100 * (i + 1) / total), 0);
