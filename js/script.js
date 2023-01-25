@@ -207,6 +207,7 @@ class MainService {
         this.increaseProgressBar(Math.round(100 * (i + 1) / total), 0);
         await this.http.get('http://localhost:3030/export/' + i);
       }
+      await this.http.get('http://localhost:3030/stop-export');
       setTimeout(() => {
         document.getElementById('progress').innerText = 'Progress : ';
         document.getElementById('proportion').innerText = ``;
